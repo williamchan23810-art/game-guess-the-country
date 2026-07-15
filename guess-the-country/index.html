@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Country</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#09131d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.jpg">
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header>
+            <div class="logo-area">
+                <span class="logo-icon"></span>
+                <h1>Guess the Country</h1>
+            </div>
+        </header>
+
+        <!-- Stats Bar -->
+        <section class="stats-bar glass-panel">
+            <div class="stat-box">
+                <span class="stat-label">Correct</span>
+                <span class="stat-value text-success" id="stats-correct">0</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Played</span>
+                <span class="stat-value" id="stats-played">0</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Accuracy</span>
+                <span class="stat-value text-accent" id="stats-accuracy">0%</span>
+            </div>
+            <div class="action-box">
+                <button id="btn-reset-main" class="btn btn-secondary">Reset Game</button>
+                <button id="btn-finish" class="btn btn-primary btn-glow">Finish & Show Results</button>
+            </div>
+        </section>
+
+        <!-- Slice Tabs Selector -->
+        <nav class="tabs-navigation glass-panel">
+            <button class="tab-button active" data-slice="1">
+                <span class="tab-time">UTC 0 to +7</span>
+            </button>
+            <button class="tab-button" data-slice="2">
+                <span class="tab-time">UTC +8 to +15</span>
+            </button>
+            <button class="tab-button" data-slice="3">
+                <span class="tab-time">UTC -8 to -1</span>
+            </button>
+        </nav>
+
+        <!-- Main Map Screen -->
+        <main class="map-container glass-panel">
+            <!-- Loading Indicator -->
+            <div id="map-loader" class="loader-container">
+                <div class="spinner"></div>
+                <p>Aligning satellite telemetry...</p>
+            </div>
+
+            <!-- Slice 1 Map Viewport -->
+            <div id="map-slice-1" class="map-viewport active" style="display: none;"></div>
+
+            <!-- Slice 2 Map Viewport -->
+            <div id="map-slice-2" class="map-viewport" style="display: none;"></div>
+
+            <!-- Slice 3 Map Viewport -->
+            <div id="map-slice-3" class="map-viewport" style="display: none;"></div>
+
+            <!-- Watermark Underneath the Map Viewport -->
+            <div class="watermark-footer">WILLIAMHCHANSTUDIO</div>
+        </main>
+    </div>
+
+    <!-- Quiz Overlay Modal -->
+    <div id="quiz-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <h3>Guess the Country</h3>
+            </div>
+            
+            <div class="modal-body">
+                <p class="instruction">Identify the highlighted territory on the map:</p>
+                <div class="choices-list" id="choices-container">
+                    <!-- Buttons injected via JS -->
+                </div>
+                <div id="quiz-feedback" class="quiz-feedback"></div>
+            </div>
+
+            <div class="modal-footer" id="modal-footer" style="display: none;">
+                <button id="btn-modal-close" class="btn btn-secondary">Close Window</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Results Screen Overlay -->
+    <div id="end-screen" class="end-screen-overlay" style="display: none;">
+        <div class="end-card glass-panel">
+            <h2>Guess the Country Completed</h2>
+            <p class="subtitle">Your Global Navigation Report</p>
+
+            <div class="score-visualization">
+                <div class="radial-progress">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="bg" cx="50" cy="50" r="45"></circle>
+                        <circle id="radial-progress-bar" class="bar" cx="50" cy="50" r="45" stroke-dasharray="282.7" stroke-dashoffset="282.7"></circle>
+                    </svg>
+                    <div class="radial-label">
+                        <span id="radial-pct" class="pct">0%</span>
+                        <span class="fraction" id="radial-fraction">0 / 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-details">
+                <div class="summary-box">
+                    <span class="label">Correct Countries</span>
+                    <span class="value text-success" id="end-correct">0</span>
+                </div>
+                <div class="summary-box">
+                    <span class="label">Total Played</span>
+                    <span class="value" id="end-played">0</span>
+                </div>
+                <div class="summary-box">
+                    <span class="label">Rank</span>
+                    <span class="value text-accent" id="end-rank">Novice Navigator</span>
+                </div>
+            </div>
+
+            <h3>Chronicle of Conquests</h3>
+            <div class="played-list-container">
+                <ul class="played-list" id="end-played-list">
+                    <!-- Injected via JS -->
+                </ul>
+            </div>
+
+            <div class="end-actions">
+                <button id="btn-resume-explore" class="btn btn-secondary">Review Maps</button>
+                <button id="btn-restart-game" class="btn btn-primary btn-glow">Reset & Restart Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Local SVG data & Main Game Logic -->
+    <script src="svg-data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
