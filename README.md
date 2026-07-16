@@ -1,6 +1,6 @@
 # 🌍 game-guess-the-country
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/8f22fa16-e4db-4b47-ad75-b92df83fce98/deploy-status)](https://game-guess-the-country.netlify.app/)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/8f22fa16-e4db-4b47-ad75-b92df83fce98/deploy-status)](https://guess-thecountry.netlify.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Vanilla JS](https://img.shields.io/badge/Vanilla-JS-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
@@ -10,9 +10,9 @@ An interactive, responsive web-based geography game where players guess countrie
 
 ## 🚀 Live Demo
 
-[![Play on Netlify](https://img.shields.io/badge/Netlify-Play%20Now-00AD9F?style=for-the-badge&logo=netlify&logoColor=white)](https://game-guess-the-country.netlify.app/)
+[![Play on Netlify](https://img.shields.io/badge/Netlify-Play%20Now-00AD9F?style=for-the-badge&logo=netlify&logoColor=white)](https://guess-thecountry.netlify.app/)
 
-👉 **[Click here to play the game live on Netlify!](https://game-guess-the-country.netlify.app/)**
+👉 **[Click here to play the game live on Netlify!](https://guess-thecountry.netlify.app/)**
 
 ---
 
