@@ -1,4 +1,4 @@
-const CACHE_NAME = 'guess-the-country-v5';
+const CACHE_NAME = 'guess-the-country-v6';
 const ASSETS = [
   './',
   './index.html',
@@ -7,7 +7,8 @@ const ASSETS = [
   './svg-data.js',
   './manifest.json',
   './icon.jpg',
-  './og-image.jpg'
+  './og-image.jpg',
+  './brand-logo.png'
 ];
 
 // Install Event - Caching assets immediately

@@ -95,62 +95,59 @@ body {
 /* Header */
 header.main-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 0 4px;
-    margin-bottom: 5px;
-    flex-wrap: wrap;
-    gap: 12px;
+    padding: 6px 0;
+    margin-bottom: 6px;
 }
 
 .logo-area {
     display: flex;
     align-items: center;
-    gap: 14px;
+    justify-content: center;
+    gap: 16px;
 }
 
 .game-logo-img {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
+    width: 74px;
+    height: 74px;
+    border-radius: 16px;
     object-fit: cover;
-    border: 1.5px solid var(--border-color);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+    transition: transform 0.25s var(--ease-smooth);
+}
+
+.game-logo-img:hover {
+    transform: scale(1.04);
+}
+
+.header-titles {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
 }
 
 header h1 {
-    font-size: 2.1rem;
+    font-size: 2.2rem;
     font-weight: 600;
     letter-spacing: 1px;
-    background: linear-gradient(135deg, var(--text-primary) 30%, #a4b0be 90%);
+    background: linear-gradient(135deg, var(--text-primary) 30%, #c8d6e5 90%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    margin: 0;
+    line-height: 1.15;
 }
 
-.branding-top-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 14px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.branding-icon-img {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.branding-text {
-    font-size: 0.68rem;
-    font-weight: 600;
+.header-tagline {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent);
     letter-spacing: 1.5px;
-    color: var(--text-muted);
+    text-transform: uppercase;
+    margin: 0;
+    opacity: 0.95;
 }
 
 /* Stats Bar */
@@ -259,28 +256,25 @@ header h1 {
     height: auto;
     max-height: 720px;
     overflow: visible;
-    background: #e5ece6; /* Greenish Off-White for clean, high-contrast ocean */
+    background: #628272; /* 2x darker greenish sea ocean for rich contrast */
     border-radius: 12px;
-    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.12);
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.25);
 }
 
 .map-viewport svg path,
 .map-viewport svg g path {
-    stroke: #16242f;
-    stroke-width: 0.45px;
+    stroke: rgba(0, 0, 0, 0.35);
+    stroke-width: 0.5px;
     stroke-linejoin: round;
     paint-order: stroke fill;
-    transition: fill 0.2s var(--ease-smooth), 
-                stroke 0.15s var(--ease-smooth), 
-                filter 0.15s var(--ease-smooth);
+    cursor: pointer;
 }
 
-/* Country Hover and Click interactive state - High performance, zero flashing */
+/* Country Hover and Click interactive state - 100% rock solid, zero flashing */
 .map-viewport svg path:hover,
 .map-viewport svg g:hover path {
     stroke: #ffffff !important;
-    stroke-width: 1px !important;
-    filter: brightness(1.18) !important;
+    stroke-width: 0.5px !important; /* Constant width prevents boundary jitter */
     cursor: pointer;
 }
 
@@ -765,30 +759,24 @@ header h1 {
     
     header.main-header {
         margin-bottom: 4px;
-        gap: 8px;
+    }
+    
+    .logo-area {
+        gap: 12px;
     }
     
     .game-logo-img {
-        width: 34px;
-        height: 34px;
+        width: 54px;
+        height: 54px;
+        border-radius: 12px;
     }
     
     header h1 {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
     }
     
-    .branding-top-right {
-        padding: 4px 10px;
-        gap: 6px;
-    }
-    
-    .branding-icon-img {
-        width: 18px;
-        height: 18px;
-    }
-    
-    .branding-text {
-        font-size: 0.58rem;
+    .header-tagline {
+        font-size: 0.68rem;
     }
     
     .stats-bar {
