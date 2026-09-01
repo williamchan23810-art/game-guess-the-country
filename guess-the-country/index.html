@@ -66,19 +66,6 @@
             </div>
         </section>
 
-        <!-- Slice Tabs Selector -->
-        <nav class="tabs-navigation glass-panel">
-            <button class="tab-button active" data-slice="1">
-                <span class="tab-time">UTC 0 to +7</span>
-            </button>
-            <button class="tab-button" data-slice="2">
-                <span class="tab-time">UTC +8 to +15</span>
-            </button>
-            <button class="tab-button" data-slice="3">
-                <span class="tab-time">UTC -8 to -1</span>
-            </button>
-        </nav>
-
         <!-- Main Map Screen -->
         <main class="map-container glass-panel">
             <!-- Loading Indicator -->
@@ -87,17 +74,12 @@
                 <p>Aligning satellite telemetry...</p>
             </div>
 
-            <!-- Slice 1 Map Viewport -->
-            <div id="map-slice-1" class="map-viewport active" style="display: none;"></div>
-
-            <!-- Slice 2 Map Viewport -->
-            <div id="map-slice-2" class="map-viewport" style="display: none;"></div>
-
-            <!-- Slice 3 Map Viewport -->
-            <div id="map-slice-3" class="map-viewport" style="display: none;"></div>
+            <!-- Single World Map Viewport -->
+            <div id="map-viewport" class="map-viewport"></div>
 
             <!-- Watermark Underneath the Map Viewport -->
             <div class="watermark-footer">WILLIAMHCHANSTUDIO</div>
+        </main>
         </main>
     </div>
 
