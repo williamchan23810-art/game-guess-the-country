@@ -1,5 +1,6 @@
-const CACHE_NAME = 'guess-the-country-v3';
+const CACHE_NAME = 'guess-the-country-v4';
 const ASSETS = [
+  './',
   './index.html',
   './style.css',
   './app.js',
@@ -8,13 +9,14 @@ const ASSETS = [
   './icon.jpg'
 ];
 
-// Install Event - Caching assets
+// Install Event - Caching assets immediately
 self.addEventListener('install', (e) => {
+  self.skipWaiting();
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('[Service Worker] Caching app shell assets');
       return cache.addAll(ASSETS);
-    }).then(() => self.skipWaiting())
+    })
   );
 });
 
@@ -34,22 +36,30 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// Fetch Event - Cache-First Strategy
+// Fetch Event - Network-First Strategy with offline cache fallback
 self.addEventListener('fetch', (e) => {
+  if (e.request.method !== 'GET') return;
+  
   e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(e.request).then((networkResponse) => {
-        // Cache dynamic assets if needed
+    fetch(e.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(e.request, responseClone);
+          });
+        }
         return networkResponse;
-      });
-    }).catch(() => {
-      // Fallback offline handler
-      if (e.request.mode === 'navigate') {
-        return caches.match('./index.html');
-      }
-    })
+      })
+      .catch(() => {
+        return caches.match(e.request).then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          if (e.request.mode === 'navigate') {
+            return caches.match('./index.html');
+          }
+        });
+      })
   );
 });

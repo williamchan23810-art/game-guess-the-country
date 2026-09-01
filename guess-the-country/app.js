@@ -387,48 +387,52 @@ function assignStableColor(countryCode) {
 // Initialize Single World Map
 function initMaps() {
     const loader = document.getElementById("map-loader");
-    const container = document.getElementById("map-viewport");
-    
-    if (container) {
-        container.innerHTML = WORLD_MAP_SVG;
+    try {
+        const container = document.getElementById("map-viewport") || document.getElementById("map-slice-1");
         
-        const svg = container.querySelector("svg");
-        if (svg) {
-            svg.setAttribute("viewBox", "0 0 1010 666");
-            svg.setAttribute("width", "100%");
-            svg.setAttribute("height", "100%");
-            svg.removeAttribute("id");
+        if (container && typeof WORLD_MAP_SVG !== 'undefined') {
+            container.innerHTML = WORLD_MAP_SVG;
             
-            // Event Delegation: Attach single click listener to the SVG element
-            svg.addEventListener("click", (e) => {
-                const countryElement = e.target.closest('path[id], g[id]');
-                if (countryElement) {
-                    const countryId = countryElement.getAttribute("id");
-                    if (countryId && countryNames[countryId]) {
-                        e.stopPropagation();
-                        handleCountryClick(countryId);
+            const svg = container.querySelector("svg");
+            if (svg) {
+                svg.setAttribute("viewBox", "0 0 1010 666");
+                svg.setAttribute("width", "100%");
+                svg.setAttribute("height", "100%");
+                svg.removeAttribute("id");
+                
+                // Event Delegation: Attach single click listener to the SVG element
+                svg.addEventListener("click", (e) => {
+                    const countryElement = e.target.closest('path[id], g[id]');
+                    if (countryElement) {
+                        const countryId = countryElement.getAttribute("id");
+                        if (countryId && countryNames[countryId]) {
+                            e.stopPropagation();
+                            handleCountryClick(countryId);
+                        }
+                    }
+                });
+            }
+
+            // Color all countries based on their ID on startup
+            container.querySelectorAll("path[id], g[id]").forEach(element => {
+                const countryId = element.getAttribute("id");
+                if (countryId && countryNames[countryId]) {
+                    if (element.tagName.toLowerCase() === 'path') {
+                        element.style.fill = assignStableColor(countryId);
+                    } else {
+                        const childPaths = element.querySelectorAll("path");
+                        childPaths.forEach(path => {
+                            path.style.fill = assignStableColor(countryId);
+                        });
                     }
                 }
             });
         }
+    } catch (err) {
+        console.error("Failed to initialize maps:", err);
+    } finally {
+        if (loader) loader.style.display = "none";
     }
-
-    // Color all countries based on their ID on startup
-    document.querySelectorAll(".map-viewport svg path, .map-viewport svg g").forEach(element => {
-        const countryId = element.getAttribute("id");
-        if (countryId && countryNames[countryId]) {
-            if (element.tagName.toLowerCase() === 'path') {
-                element.style.fill = assignStableColor(countryId);
-            } else {
-                const childPaths = element.querySelectorAll("path");
-                childPaths.forEach(path => {
-                    path.style.fill = assignStableColor(countryId);
-                });
-            }
-        }
-    });
-
-    if (loader) loader.style.display = "none";
 }
 
 // Click callback for countries
