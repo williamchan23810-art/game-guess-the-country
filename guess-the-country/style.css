@@ -93,80 +93,64 @@ body {
 }
 
 /* Header */
-header {
-    text-align: center;
+header.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px;
     margin-bottom: 5px;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .logo-area {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 6px;
+    gap: 14px;
 }
 
-.logo-icon {
-    width: 36px;
-    height: 36px;
-    position: relative;
-    border-radius: 50%;
-    background: #2a739c; /* Ocean color */
-    border: 2px solid var(--primary);
-    overflow: hidden;
-    box-shadow: inset -4px -4px 8px rgba(0,0,0,0.5), 0 0 10px rgba(0,210,255,0.3);
-    display: inline-block;
-    filter: drop-shadow(0 0 10px var(--primary-glow));
-    vertical-align: middle;
-}
-
-.logo-icon::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 200%;
-    height: 100%;
-    /* Simplified continent shapes repeated horizontally */
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" fill="%23fcd33f"><path d="M 15 25 q 10 -15 25 -5 t 25 -5 t 20 15 v 15 q -15 15 -35 5 t -35 -10 Z M 115 25 q 10 -15 25 -5 t 25 -5 t 20 15 v 15 q -15 15 -35 5 t -35 -10 Z M 60 50 q 8 -5 15 0 t 15 -5 v 10 Z M 160 50 q 8 -5 15 0 t 15 -5 v 10 Z"/></svg>');
-    background-size: 50% 100%;
-    background-repeat: repeat-x;
-    animation: spinGlobe 8s linear infinite;
-}
-
-@keyframes spinGlobe {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+.game-logo-img {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1.5px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
 header h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    letter-spacing: 2px;
+    font-size: 2.1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
     background: linear-gradient(135deg, var(--text-primary) 30%, #a4b0be 90%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-.badge {
-    background: linear-gradient(135deg, var(--accent) 0%, #ff6b81 100%);
-    color: #ffffff;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    padding: 4px 10px;
+.branding-top-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
     border-radius: 20px;
-    letter-spacing: 1px;
-    box-shadow: 0 0 12px var(--accent-glow);
-    transform: translateY(-2px);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-header .subtitle {
+.branding-icon-img {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.branding-text {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
     color: var(--text-muted);
-    font-size: 0.95rem;
-    font-weight: 300;
-    letter-spacing: 1px;
 }
 
 /* Stats Bar */
@@ -187,14 +171,15 @@ header .subtitle {
 
 .stat-label {
     font-size: 0.75rem;
+    font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--text-muted);
 }
 
 .stat-value {
-    font-size: 1.6rem;
-    font-weight: 800;
+    font-size: 1.5rem;
+    font-weight: 600;
     letter-spacing: 0.5px;
 }
 
@@ -225,7 +210,7 @@ header .subtitle {
 .watermark-footer {
     text-align: center;
     font-size: 0.65rem;
-    font-weight: 800;
+    font-weight: 500;
     letter-spacing: 2px;
     color: rgba(255, 255, 255, 0.45);
     padding-top: 16px;
@@ -274,20 +259,15 @@ header .subtitle {
     height: auto;
     max-height: 720px;
     overflow: visible;
-    background: repeating-linear-gradient(
-        -45deg,
-        #2a739c,
-        #2a739c 15px,
-        #153a4e 15px,
-        #153a4e 18px
+    background: #e5ece6; /* Greenish Off-White for clean, high-contrast ocean */
     border-radius: 12px;
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.12);
 }
 
 .map-viewport svg path,
 .map-viewport svg g path {
-    stroke: var(--map-stroke);
-    stroke-width: 0.4px;
+    stroke: #16242f;
+    stroke-width: 0.45px;
     stroke-linejoin: round;
     paint-order: stroke fill;
     transition: fill 0.2s var(--ease-smooth), 
@@ -298,9 +278,9 @@ header .subtitle {
 /* Country Hover and Click interactive state - High performance, zero flashing */
 .map-viewport svg path:hover,
 .map-viewport svg g:hover path {
-    stroke: var(--map-hover-stroke) !important;
+    stroke: #ffffff !important;
     stroke-width: 1px !important;
-    filter: brightness(1.2) !important;
+    filter: brightness(1.18) !important;
     cursor: pointer;
 }
 
@@ -309,10 +289,10 @@ header .subtitle {
 .map-viewport svg g.correct path,
 .map-viewport svg .failed,
 .map-viewport svg g.failed path {
-    fill: #ffffff !important; /* Both Correct and Failed turn White */
-    stroke: #09131d !important; /* Dark matching the reference */
-    stroke-width: 0.5px !important;
-    filter: none !important;
+    fill: #ffffff !important; /* Answered countries turn pure White */
+    stroke: #16242f !important;
+    stroke-width: 0.6px !important;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15)) !important;
     pointer-events: none !important; /* Disable clicking again in the same round */
     cursor: default !important;
 }
@@ -333,19 +313,18 @@ header .subtitle {
 .map-viewport svg .active-pulse,
 .map-viewport svg g.active-pulse path {
     stroke: var(--accent) !important;
-    stroke-width: 1.1px !important; /* Reduced by 50% */
+    stroke-width: 1.1px !important;
     animation: countryPulse 1.5s infinite alternate var(--ease-smooth);
 }
 
 /* Dynamic Map Labels */
 .map-viewport svg text.map-country-label {
-    fill: #09131d; /* Dark text matching the borders */
-    font-weight: 800;
-    pointer-events: none; /* Crucial: clicks must pass through text */
+    fill: #09131d; /* Dark crisp text on white answered country */
+    font-weight: 600; /* Reduced from 800 */
+    pointer-events: none !important; /* Crucial: clicks must pass through text */
     user-select: none;
-    text-shadow: 0 0 1.5px #ffffff, 0 0 1.5px #ffffff; /* Thick white glow for contrast */
+    text-shadow: 0 0 2px #ffffff, 0 0 3px #ffffff; /* Clean white glow for contrast */
     font-family: 'Outfit', sans-serif;
-    animation: fadeIn 0.4s var(--ease-smooth);
 }
 
 /* Buttons */
@@ -445,7 +424,7 @@ header .subtitle {
 
 .modal-header h3 {
     font-size: 1.3rem;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--text-primary);
 }
 
@@ -593,7 +572,7 @@ header .subtitle {
 
 .end-card h2 {
     font-size: 1.8rem;
-    font-weight: 800;
+    font-weight: 600;
     background: linear-gradient(135deg, #ffffff 30%, #a4b0be 90%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -647,7 +626,7 @@ header .subtitle {
 
 .radial-label .pct {
     font-size: 1.7rem;
-    font-weight: 800;
+    font-weight: 600;
     color: var(--text-primary);
 }
 
@@ -679,7 +658,7 @@ header .subtitle {
 
 .summary-box .value {
     font-size: 1.2rem;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 /* Played List Summary */
@@ -720,7 +699,7 @@ header .subtitle {
     padding: 2px 8px;
     border-radius: 12px;
     font-size: 0.65rem;
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
 }
 
@@ -784,17 +763,32 @@ header .subtitle {
         gap: 12px;
     }
     
-    header {
+    header.main-header {
         margin-bottom: 4px;
+        gap: 8px;
+    }
+    
+    .game-logo-img {
+        width: 34px;
+        height: 34px;
     }
     
     header h1 {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
     }
     
-    .logo-icon {
-        width: 28px;
-        height: 28px;
+    .branding-top-right {
+        padding: 4px 10px;
+        gap: 6px;
+    }
+    
+    .branding-icon-img {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .branding-text {
+        font-size: 0.58rem;
     }
     
     .stats-bar {
