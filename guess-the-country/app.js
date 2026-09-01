@@ -2403,7 +2403,9 @@ const countryPositions = {
 let gameState = {
     history: {}, // Maps countryCode -> { status: 'correct' | 'failed', attemptsUsed: number }
     activeCountryId: null,
-    activeChances: 2
+    activeChances: 1,
+    legendMap: {},
+    nextLegendNumber: 1
 };
 
 // Flag Emojis generator helper
@@ -2746,7 +2748,15 @@ function removeRedCross(countryId) {
     });
 }
 
-// Add SVG country text labels at centroid
+// Check if a country is small/narrow and should use numbered circle callouts
+function isSmallCountry(countryId) {
+    const pos = countryPositions[countryId];
+    const name = countryNames[countryId] || countryId;
+    if (!pos) return false;
+    return pos.width < 36 || (pos.width / name.length) < 2.8;
+}
+
+// Add SVG country text labels at centroid or numbered callout
 function addCountryLabel(countryId) {
     // Remove existing labels for this country first to avoid duplicates
     removeCountryLabel(countryId);
@@ -2758,8 +2768,8 @@ function addCountryLabel(countryId) {
         if (!svg) return;
         
         try {
-            let x, y, width;
             const pos = countryPositions[countryId];
+            let x, y, width;
             if (pos) {
                 x = pos.x;
                 y = pos.y;
@@ -2772,35 +2782,122 @@ function addCountryLabel(countryId) {
                 width = bbox.width;
             }
             
-            const textNode = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            textNode.setAttribute("x", x);
-            textNode.setAttribute("y", y);
-            textNode.setAttribute("text-anchor", "middle");
-            textNode.setAttribute("dominant-baseline", "middle");
-            textNode.setAttribute("class", "map-country-label");
-            textNode.setAttribute("data-country-id", countryId);
+            const name = countryNames[countryId] || countryId.toUpperCase();
+            const needsCallout = isSmallCountry(countryId);
             
-            // Adjust font size dynamically based on width to fit cleanly
-            const fontSize = Math.max(4, Math.min(8.5, width / 6.5));
-            textNode.setAttribute("style", `font-size: ${fontSize}px;`);
-            
-            let displayName = countryNames[countryId] || countryId.toUpperCase();
-            if (width < 35 && displayName.length > 8) {
-                displayName = countryId.toUpperCase();
+            if (needsCallout) {
+                // Assign legend number
+                if (!gameState.legendMap[countryId]) {
+                    gameState.legendMap[countryId] = gameState.nextLegendNumber++;
+                }
+                const num = gameState.legendMap[countryId];
+                
+                const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                g.setAttribute("class", "map-country-callout");
+                g.setAttribute("data-country-id", countryId);
+                
+                let circleX = x;
+                let circleY = y;
+                
+                // If very small (islands, narrow strip), draw leader line into adjacent sea
+                if (width < 14) {
+                    circleX = x + 14;
+                    circleY = y - 9;
+                    
+                    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    line.setAttribute("x1", x);
+                    line.setAttribute("y1", y);
+                    line.setAttribute("x2", circleX);
+                    line.setAttribute("y2", circleY);
+                    line.setAttribute("class", "callout-line");
+                    g.appendChild(line);
+                }
+                
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", circleX);
+                circle.setAttribute("cy", circleY);
+                circle.setAttribute("r", "4.5");
+                circle.setAttribute("class", "callout-circle");
+                
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", circleX);
+                text.setAttribute("y", circleY);
+                text.setAttribute("class", "callout-text");
+                text.textContent = num;
+                
+                g.appendChild(circle);
+                g.appendChild(text);
+                svg.appendChild(g);
+                
+                updateLegendUI();
+            } else {
+                // Large country: display direct text on map
+                const textNode = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                textNode.setAttribute("x", x);
+                textNode.setAttribute("y", y);
+                textNode.setAttribute("text-anchor", "middle");
+                textNode.setAttribute("dominant-baseline", "middle");
+                textNode.setAttribute("class", "map-country-label");
+                textNode.setAttribute("data-country-id", countryId);
+                
+                const fontSize = Math.max(4.5, Math.min(8.5, width / 6.5));
+                textNode.setAttribute("style", `font-size: ${fontSize}px;`);
+                textNode.textContent = name;
+                svg.appendChild(textNode);
             }
-            
-            textNode.textContent = displayName;
-            svg.appendChild(textNode);
         } catch (e) {
-            console.error("Failed to add text label for " + countryId, e);
+            console.error("Failed to add label for " + countryId, e);
         }
     });
 }
 
-// Remove SVG country text labels
+// Remove SVG country text labels and callouts
 function removeCountryLabel(countryId) {
-    document.querySelectorAll(`.map-viewport svg text[data-country-id="${countryId}"]`).forEach(elem => {
-        elem.remove();
+    document.querySelectorAll(`.map-viewport svg text.map-country-label[data-country-id="${countryId}"]`).forEach(elem => elem.remove());
+    document.querySelectorAll(`.map-viewport svg g.map-country-callout[data-country-id="${countryId}"]`).forEach(elem => elem.remove());
+    if (gameState.legendMap) {
+        delete gameState.legendMap[countryId];
+    }
+    updateLegendUI();
+}
+
+// Update the Bottom-Left Map Legend UI
+function updateLegendUI() {
+    const legendPanel = document.getElementById("map-legend");
+    const legendList = document.getElementById("legend-list");
+    if (!legendPanel || !legendList) return;
+    
+    const entries = Object.keys(gameState.legendMap).map(id => ({
+        id,
+        num: gameState.legendMap[id],
+        name: countryNames[id] || id
+    })).sort((a, b) => a.num - b.num);
+    
+    if (entries.length === 0) {
+        legendPanel.style.display = "none";
+        legendList.innerHTML = "";
+        return;
+    }
+    
+    legendPanel.style.display = "block";
+    legendList.innerHTML = "";
+    
+    entries.forEach(entry => {
+        const div = document.createElement("div");
+        div.className = "legend-item";
+        div.setAttribute("data-country-id", entry.id);
+        div.innerHTML = `<span class="legend-badge">${entry.num}</span><span class="legend-name">${entry.name}</span>`;
+        
+        // Clicking a legend item pulses the country on the map
+        div.addEventListener("click", () => {
+            clearPulseHighlight();
+            document.querySelectorAll(`.map-viewport svg #${entry.id}, .map-viewport svg [id="${entry.id}"]`).forEach(elem => {
+                elem.classList.add("active-pulse");
+                setTimeout(() => elem.classList.remove("active-pulse"), 2500);
+            });
+        });
+        
+        legendList.appendChild(div);
     });
 }
 
@@ -2900,8 +2997,11 @@ function showEndScreen() {
 // Reset Game Completely
 function resetGame() {
     gameState.history = {};
+    gameState.legendMap = {};
+    gameState.nextLegendNumber = 1;
     saveGame();
     updateScoreboard();
+    updateLegendUI();
     
     // Reset colors on all SVGs
     document.querySelectorAll(".map-viewport svg path, .map-viewport svg g").forEach(elem => {

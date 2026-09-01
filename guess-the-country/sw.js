@@ -1,4 +1,4 @@
-const CACHE_NAME = 'guess-the-country-v6';
+const CACHE_NAME = 'guess-the-country-v7';
 const ASSETS = [
   './',
   './index.html',
